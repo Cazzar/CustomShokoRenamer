@@ -74,12 +74,10 @@ namespace Renamer.Cazzar
         public (ImportFolder dest, string folder) GetDestinationFolder(SVR_VideoLocal_Place video)
         {
             var anime = RepoFactory.AniDB_Anime.GetByAnimeID(video.VideoLocal.GetAnimeEpisodes()[0].AniDB_Episode.AnimeID);
-            bool IsPorn = anime.Restricted > 0;
             var location = "/anime/";
             if (anime.GetAnimeTypeEnum() == AnimeType.Movie) location = "/movies/";
-            if (IsPorn) location = "/porn/";
-
-
+            if (anime.TagsString.Contains("sex") || anime.TagsString.Contains("pornography") || anime.TagsString.Contains("18 restricted") || anime.Restricted > 0) location = "/porn/";
+            
             ImportFolder dest = RepoFactory.ImportFolder.GetByImportLocation(location);
 
             return (dest, Utils.ReplaceInvalidFolderNameCharacters(anime.PreferredTitle));
