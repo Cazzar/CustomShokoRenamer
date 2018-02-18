@@ -45,38 +45,26 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MyRenamer.cs" />
+    <Compile Include="NoSpaceRenamer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="ShokoServer\CloudFileSystem\NutzCode.CloudFileSystem\NutzCode.CloudFileSystem.csproj">
-      <Project>{29861d1a-968c-49ca-a637-88b391aa5063}</Project>
-      <Name>NutzCode.CloudFileSystem</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="ShokoServer\CloudFileSystem\NutzCode.Libraries.Web\NutzCode.Libraries.Web.csproj">
-      <Project>{865c8b13-eb43-439e-9d69-ce7b54dca4ff}</Project>
-      <Name>NutzCode.Libraries.Web</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="ShokoServer\Shoko.Commons\Shoko.Commons.csproj">
-      <Project>{e0399140-9902-4f38-909d-85e42717ec30}</Project>
-      <Name>Shoko.Commons</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="ShokoServer\Shoko.Commons\Shoko.Models\Shoko.Models.csproj">
-      <Project>{f73f9df6-580a-4341-b516-8717626f9d42}</Project>
-      <Name>Shoko.Models</Name>
-      <Private>False</Private>
-    </ProjectReference>
-    <ProjectReference Include="ShokoServer\Shoko.Server\Shoko.Server.csproj">
-      <Project>{da8f0783-0f82-4106-9860-6f09ba2ea522}</Project>
-      <Name>Shoko.Server</Name>
-      <Private>False</Private>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="ShokoServer\Shoko.Commons\Shoko.Commons.csproj">
+      <Project>{e0399140-9902-4f38-909d-85e42717ec30}</Project>
+      <Name>Shoko.Commons</Name>
+    </ProjectReference>
+    <ProjectReference Include="ShokoServer\Shoko.Commons\Shoko.Models\Shoko.Models.csproj">
+      <Project>{F73F9DF6-580A-4341-B516-8717626F9D42}</Project>
+      <Name>Shoko.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="ShokoServer\Shoko.Server\Shoko.Server.csproj">
+      <Project>{DA8F0783-0F82-4106-9860-6F09BA2EA522}</Project>
+      <Name>Shoko.Server</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
