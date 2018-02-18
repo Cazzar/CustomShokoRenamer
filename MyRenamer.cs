@@ -50,7 +50,7 @@ namespace Renamer.Cazzar
                 (file.File_Source.Equals("DVD", StringComparison.InvariantCultureIgnoreCase) ||
                  file.File_Source.Equals("Blu-ray", StringComparison.InvariantCultureIgnoreCase)))
 
-                name.Append($" {file.File_Source}");
+            name.Append($" {file.File_Source}");
 
             name.Append($" {(file?.File_VideoCodec ?? video.VideoCodec).Replace("\\", "").Replace("/", "")}".TrimEnd());
 
@@ -58,8 +58,10 @@ namespace Renamer.Cazzar
                 name.Append($" {video.VideoBitDepth}bit");
             name.Append(')');
 
+            if (file.IsCensored != 0) name.Append(" [CEN]");
+
             name.Append($" [{video.CRC32.ToUpper()}]");
-            name.Append($"{System.IO.Path.GetExtension(video.FileName)}");
+            name.Append($"{System.IO.Path.GetExtension(video.GetBestVideoLocalPlace().FilePath)}");
 
             return Utils.ReplaceInvalidFolderNameCharacters(name.ToString());
         }
@@ -73,11 +75,15 @@ namespace Renamer.Cazzar
         {
             var anime = RepoFactory.AniDB_Anime.GetByAnimeID(video.VideoLocal.GetAnimeEpisodes()[0].AniDB_Episode.AnimeID);
             bool IsPorn = anime.Restricted > 0;
+            var location = "/anime/";
+            if (anime.GetAnimeTypeEnum() == AnimeType.Movie) location = "/movies/";
+            if (IsPorn) location = "/porn/";
 
-            ImportFolder dest = RepoFactory.ImportFolder.GetByImportLocation(IsPorn ? "/porn/" : "/anime/");
-            //ImportFolder dest = RepoFactory.ImportFolder.GetByImportLocation(IsPorn ? @"Z:\plex\Anime_H\" : @"Z:\plex\Anime_Out\");
+
+            ImportFolder dest = RepoFactory.ImportFolder.GetByImportLocation(location);
 
             return (dest, Utils.ReplaceInvalidFolderNameCharacters(anime.PreferredTitle));
         }
     }
 }
+                                                                                                      
