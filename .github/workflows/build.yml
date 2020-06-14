@@ -27,8 +27,8 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
       - run: sudo apt-get update
       - run: sudo apt-get install libicu60
-      - run: dotnet restore Shoko.CLI
-      - run: dotnet publish -c Release Shoko.CLI
+      - run: dotnet restore CustomRenamer
+      - run: dotnet publish -c Release CustomRenamer
       - uses: actions/upload-artifact@v2
         with:
           name: ${{ matrix.rid }}
