@@ -11,7 +11,7 @@ using Shoko.Server;
 namespace Renamer.Cazzar
 {
 
-    [Renamer("CazzarRenamer", Description = "Cazzar's Custom Renamer")]
+    [Renamer("CazzarRenamer", Description = "Cazzar's Custom Renamer (Linux)")]
     public class MyRenamer : IRenamer
     {
         public string GetFileName(SVR_VideoLocal_Place video) => GetFileName(video.VideoLocal);
@@ -52,10 +52,10 @@ namespace Renamer.Cazzar
 
             name.Append($" {file.File_Source}");
 
-            name.Append($" {(file?.File_VideoCodec ?? video.VideoCodec).Replace("\\", "").Replace("/", "")}".TrimEnd());
+            name.Append($" {(file?.File_VideoCodec ?? video.Media?.VideoStream.CodecID).Replace("\\", "").Replace("/", "")}".TrimEnd());
 
-            if (video.VideoBitDepth == "10")
-                name.Append($" {video.VideoBitDepth}bit");
+            if (video.Media?.VideoStream?.BitDepth == 10)
+                name.Append(" 10bit");
             name.Append(')');
 
             if (file.IsCensored != 0) name.Append(" [CEN]");
@@ -68,7 +68,7 @@ namespace Renamer.Cazzar
 
         string PadNumberTo(int number, int max, char padWith = '0')
         {
-            return number.ToString().PadLeft(max.ToString().Length, padWith);
+            return number.ToString().PadLeft(Math.Max(max.ToString().Length, 2), padWith);
         }
 
         public (ImportFolder dest, string folder) GetDestinationFolder(SVR_VideoLocal_Place video)
