@@ -15,7 +15,7 @@ jobs:
         # rid: ['win-x64', 'linux-x64']
         dotnet: [ '3.1.x' ]
 
-    name: ${{ matrix.rid }} Shoko CLI build
+    name: ${{ matrix.rid }} build
 
     steps:
       - uses: actions/checkout@master
@@ -27,9 +27,8 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
       - run: sudo apt-get update
       - run: sudo apt-get install libicu60
-      - run: dotnet restore
-      - run: dotnet publish -c Release
+      - run: dotnet restore CustomRenamer.csproj
+      - run: dotnet publish -c Release CustomRenamer.csproj
       - uses: actions/upload-artifact@v2
         with:
-          name: ${{ matrix.rid }}
-          path: bin/Debug/netstandard2.0/Renamer.Cazzar.*
+          path: bin/Release/netstandard2.1/{CsvHelper.dll,InfluxDB.Client.Core.dll,InfluxDB.Client.dll,JsonSubTypes.dll,NodaTime.dll,NodaTime.Serialization.JsonNet.dll,Renamer.Cazzar.deps.json,Renamer.Cazzar.dll,Renamer.Cazzar.dll.config,Renamer.Cazzar.pdb,RestSharp.dll,System.Collections.Immutable.dll,System.Configuration.ConfigurationManager.dll,System.Reactive.dll}
