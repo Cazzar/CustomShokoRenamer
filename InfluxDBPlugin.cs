@@ -37,7 +37,7 @@ namespace Renamer.Cazzar
         private async void QueueUpdate(QueueCountEventArgs e, string queue)
         {
             await CheckInflux();
-            var db = _influxDb.GetWriteApi();
+            using var db = _influxDb.GetWriteApi();
             var datapoint = new DataPoint()
             {
                 Count = e.QueueCount,

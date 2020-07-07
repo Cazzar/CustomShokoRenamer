@@ -31,4 +31,4 @@ jobs:
       - run: dotnet publish -c Release CustomRenamer.csproj
       - uses: actions/upload-artifact@v2
         with:
-          path: bin/Release/netstandard2.1/{CsvHelper.dll,InfluxDB.Client.Core.dll,InfluxDB.Client.dll,JsonSubTypes.dll,NodaTime.dll,NodaTime.Serialization.JsonNet.dll,Renamer.Cazzar.deps.json,Renamer.Cazzar.dll,Renamer.Cazzar.dll.config,Renamer.Cazzar.pdb,RestSharp.dll,System.Collections.Immutable.dll,System.Configuration.ConfigurationManager.dll,System.Reactive.dll}
+          path: bin/Release/netstandard2.1/Renamer.Cazzar*
