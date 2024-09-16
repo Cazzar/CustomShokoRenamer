@@ -2,7 +2,7 @@
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <RuntimeIdentifiers>win10-x64;win;linux-x64;linux-x86</RuntimeIdentifiers>
+    <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
     <Platforms>x64;x86</Platforms>
     <RootNamespace>Renamer.Cazzar</RootNamespace>
     <AssemblyName>Renamer.Cazzar</AssemblyName>
@@ -13,18 +13,6 @@
   <ItemGroup>
     <PackageReference Include="InfluxDB.Client" Version="4.6.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="packages\**" />
-    <Compile Remove="ShokoServer\**" />
-    <EmbeddedResource Remove="packages\**" />
-    <EmbeddedResource Remove="ShokoServer\**" />
-    <None Remove="packages\**" />
-    <None Remove="ShokoServer\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="ShokoServer\Shoko.Commons\Shoko.Commons.csproj" />
-    <ProjectReference Include="ShokoServer\Shoko.Commons\Shoko.Models\Shoko.Models.csproj" />
-    <ProjectReference Include="ShokoServer\Shoko.Server\Shoko.Server.csproj" />
+    <PackageReference Include="Shoko.Plugin.Abstractions" Version="4.0.0-beta7" />
   </ItemGroup>
 </Project>
