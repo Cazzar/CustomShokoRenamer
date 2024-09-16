@@ -1,89 +1,99 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
-using Shoko.Commons.Extensions;
-using Shoko.Models.Enums;
-using Shoko.Models.Server;
-using Shoko.Server.Models;
-using Shoko.Server.Renamer;
-using Shoko.Server.Repositories;
-using Shoko.Server;
+using Shoko.Plugin.Abstractions;
+using Shoko.Plugin.Abstractions.Attributes;
+using Shoko.Plugin.Abstractions.DataModels;
+using Shoko.Plugin.Abstractions.Events;
 
-namespace Renamer.Cazzar
+namespace Renamer.Cazzar;
+
+[RenamerID("CazzarRenamer")]
+public class MyRenamer : IRenamer
 {
-
-    [Renamer("CazzarRenamer", Description = "Cazzar's Custom Renamer (Linux)")]
-    public class MyRenamer : IRenamer
+    public string Name => "Cazzar Renamer";
+    public string Description => "Cazzar's Custom Renamer (Linux)";
+    public bool SupportsMoving => true;
+    public bool SupportsRenaming => true;
+    public RelocationResult GetNewPath(RelocationEventArgs args)
     {
-        public string GetFileName(SVR_VideoLocal_Place video) => GetFileName(video.VideoLocal);
-
-        public string GetFileName(SVR_VideoLocal video)
+        var filename = GetFileName(args);
+        var dest = GetDestinationFolder(args);
+        return new RelocationResult
         {
-            var file = video.GetAniDBFile();
-            var episode = video.GetAnimeEpisodes()[0].AniDB_Episode;
-            var anime = RepoFactory.AniDB_Anime.GetByAnimeID(episode.AnimeID);
+            FileName = filename,
+            Path = dest.folder,
+            DestinationImportFolder = dest.dest
+        };
+    }
 
-            StringBuilder name = new StringBuilder();
+    private string GetFileName(RelocationEventArgs args)
+    {
+        var file = args.File.Video;
+        var episode = args.Episodes.FirstOrDefault();
+        var anime = args.Series.FirstOrDefault();
 
-            if (!string.IsNullOrWhiteSpace(file.Anime_GroupNameShort))
-                name.Append($"[{file.Anime_GroupNameShort}]");
+        var name = new StringBuilder();
 
-            name.Append($" {anime.PreferredTitle}");
-            if (anime.AnimeType != (int)AnimeType.Movie)
+        if (!string.IsNullOrWhiteSpace(file.AniDB.ReleaseGroup.ShortName))
+            name.Append($"[{file.AniDB.ReleaseGroup.ShortName}]");
+
+        name.Append($" {anime.PreferredTitle}");
+        if (anime.Type != AnimeType.Movie)
+        {
+            var prefix = episode.Type switch
             {
-                string prefix = "";
+                EpisodeType.Credits => "C",
+                EpisodeType.Other => "O",
+                EpisodeType.Parody => "P",
+                EpisodeType.Special => "S",
+                EpisodeType.Trailer => "T",
+                _ => ""
+            };
 
-                if (episode.GetEpisodeTypeEnum() == EpisodeType.Credits) prefix = "C";
-                if (episode.GetEpisodeTypeEnum() == EpisodeType.Other) prefix = "O";
-                if (episode.GetEpisodeTypeEnum() == EpisodeType.Parody) prefix = "P";
-                if (episode.GetEpisodeTypeEnum() == EpisodeType.Special) prefix = "S";
-                if (episode.GetEpisodeTypeEnum() == EpisodeType.Trailer) prefix = "T";
+            var epCount = episode.Type switch
+            {
+                EpisodeType.Episode => anime.EpisodeCounts.Episodes,
+                EpisodeType.Special => anime.EpisodeCounts.Specials,
+                _ => 1
+            };
 
-                int epCount = 1;
-
-                if (episode.GetEpisodeTypeEnum() == EpisodeType.Episode) epCount = anime.EpisodeCountNormal;
-                if (episode.GetEpisodeTypeEnum() == EpisodeType.Special) epCount = anime.EpisodeCountSpecial;
-
-                name.Append($" - {prefix}{PadNumberTo(episode.EpisodeNumber, epCount)}");
-            }
-            name.Append($" ({video.VideoResolution}");
-            if (file.File_Source != null &&
-                (file.File_Source.Equals("DVD", StringComparison.InvariantCultureIgnoreCase) ||
-                 file.File_Source.Equals("Blu-ray", StringComparison.InvariantCultureIgnoreCase)))
-
-            name.Append($" {file.File_Source}");
-
-            name.Append($" {(file?.File_VideoCodec ?? video.Media?.VideoStream.CodecID).Replace("\\", "").Replace("/", "")}".TrimEnd());
-
-            if (video.Media?.VideoStream?.BitDepth == 10)
-                name.Append(" 10bit");
-            name.Append(')');
-
-            if (file.IsCensored != 0) name.Append(" [CEN]");
-
-            name.Append($" [{video.CRC32.ToUpper()}]");
-            name.Append($"{System.IO.Path.GetExtension(video.GetBestVideoLocalPlace().FilePath)}");
-
-            return Utils.ReplaceInvalidFolderNameCharacters(name.ToString());
+            name.Append($" - {prefix}{PadNumberTo(episode.EpisodeNumber, epCount)}");
         }
+        name.Append($" ({file.MediaInfo.VideoStream.Resolution}");
+        if (file.AniDB.Source.Equals("DVD", StringComparison.InvariantCultureIgnoreCase) ||
+            file.AniDB.Source.Equals("Blu-ray", StringComparison.InvariantCultureIgnoreCase))
+            name.Append($" {file.AniDB.Source}");
 
-        string PadNumberTo(int number, int max, char padWith = '0')
-        {
-            return number.ToString().PadLeft(Math.Max(max.ToString().Length, 2), padWith);
-        }
+        name.Append($" {(file.MediaInfo.VideoStream.Codec.Simplified ?? file.MediaInfo.VideoStream.Codec.Name).Replace("\\", "").Replace("/", "")}".TrimEnd());
 
-        public (ImportFolder dest, string folder) GetDestinationFolder(SVR_VideoLocal_Place video)
-        {
-            var anime = RepoFactory.AniDB_Anime.GetByAnimeID(video.VideoLocal.GetAnimeEpisodes()[0].AniDB_Episode.AnimeID);
-            bool isPorn = anime.Restricted > 0;
-            var location = "/anime/";
-            if (anime.GetAnimeTypeEnum() == AnimeType.Movie) location = "/movies/";
-            if (isPorn) location = "/porn/";
+        if (file.MediaInfo?.VideoStream?.BitDepth == 10)
+            name.Append(" 10bit");
+        name.Append(')');
 
+        if (file.AniDB.Censored) name.Append(" [CEN]");
 
-            ImportFolder dest = RepoFactory.ImportFolder.GetByImportLocation(location);
+        name.Append($" [{file.Hashes.CRC.ToUpper()}]");
+        name.Append($"{System.IO.Path.GetExtension(args.File.FileName)}");
 
-            return (dest, Utils.ReplaceInvalidFolderNameCharacters(anime.PreferredTitle));
-        }
+        return name.ToString().ReplaceInvalidPathCharacters();
+    }
+
+    private static string PadNumberTo(int number, int max, char padWith = '0')
+    {
+        return number.ToString().PadLeft(Math.Max(max.ToString().Length, 2), padWith);
+    }
+
+    private (IImportFolder dest, string folder) GetDestinationFolder(RelocationEventArgs args)
+    {
+        var anime = args.Series.FirstOrDefault();
+        var isPorn = anime.Restricted;
+        var location = "/anime/";
+        if (anime.Type == AnimeType.Movie) location = "/movies/";
+        if (isPorn) location = "/porn/";
+
+        var dest = args.AvailableFolders.FirstOrDefault(a => a.Path.Equals(location, StringComparison.InvariantCultureIgnoreCase));
+
+        return (dest, anime.PreferredTitle.ReplaceInvalidPathCharacters());
     }
 }
-                                                                                                      

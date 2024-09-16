@@ -1,14 +1,11 @@
-﻿using Shoko.Models.Server;
-using Shoko.Server;
-using Shoko.Server.Models;
-using Shoko.Server.Renamer;
-using Shoko.Server.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// TODO as far as I can tell, this is completely unnecessary now
+/*
 namespace Renamer.Cazzar
 {
     [Renamer("MxFlix", Description = "MxFlix's custom renamer")]
@@ -45,3 +42,4 @@ namespace Renamer.Cazzar
         public string GetFileName(SVR_VideoLocal video) => script.GetFileName(video);
     }
 }
+*/

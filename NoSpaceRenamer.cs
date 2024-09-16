@@ -1,10 +1,11 @@
-﻿using Shoko.Models.Server;
-using Shoko.Server.Models;
-using Shoko.Server.Renamer;
+﻿using Shoko.Plugin.Abstractions;
+using Shoko.Plugin.Abstractions.Attributes;
 
+// TODO maybe update this with some way to run another existing renamer config
+/*
 namespace Renamer.Cazzar
 {
-    [Renamer("NoSpaces", Description = "Renamer that doesn't use spaces")]
+    [RenamerID("NoSpaces", Description = "Renamer that doesn't use spaces")]
     class NoSpaceRenamer : IRenamer
     {
         private readonly LegacyRenamer script;
@@ -25,3 +26,4 @@ namespace Renamer.Cazzar
         }
     }
 }
+*/
