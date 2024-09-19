@@ -27,6 +27,6 @@ jobs:
           dotnet-version: ${{ matrix.dotnet }}
       - run: dotnet restore CustomRenamer.csproj
       - run: dotnet publish -c Release CustomRenamer.csproj
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           path: bin/Release/netstandard2.1/Renamer.Cazzar*
