@@ -1,4 +1,6 @@
-﻿using System;
+﻿/*
+
+using System;
 using System.Threading.Tasks;
 using InfluxDB.Client;
 using InfluxDB.Client.Api.Domain;
@@ -6,7 +8,6 @@ using Renamer.Cazzar.Influx;
 using Shoko.Plugin.Abstractions;
 
 namespace Renamer.Cazzar;
-
 public class InfluxDbPlugin : IPlugin
 {
     private readonly IShokoEventHandler _eventHandler;
@@ -40,7 +41,7 @@ public class InfluxDbPlugin : IPlugin
         this._influxDb = InfluxDBClientFactory.CreateV1("http://192.168.1.3:8086", "", new char[0], "shoko", "autogen");
     }
 
-    /*private async void QueueUpdate(QueueCountEventArgs e, string queue)
+    private async void QueueUpdate(QueueCountEventArgs e, string queue)
     {
         await CheckInflux();
         using var db = _influxDb.GetWriteApi();
@@ -50,5 +51,6 @@ public class InfluxDbPlugin : IPlugin
             Queue =  queue
         };
         db.WriteMeasurement("shoko", "default", WritePrecision.Ms, datapoint);
-    }*/
+    }* /
 }
+*/

@@ -1,4 +1,6 @@
-﻿using InfluxDB.Client.Core;
+﻿
+/*
+using InfluxDB.Client.Core;
 
 namespace Renamer.Cazzar.Influx
 {
@@ -9,3 +11,4 @@ namespace Renamer.Cazzar.Influx
         [Column("count")] public int Count { get; set; }
     }
 }
+*/
