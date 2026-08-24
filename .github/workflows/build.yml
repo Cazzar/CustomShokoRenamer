@@ -13,20 +13,21 @@ jobs:
     strategy:
       matrix:
         # rid: ['win-x64', 'linux-x64']
-        dotnet: [ '6.x' ]
+        dotnet: [ '10.x' ]
 
     name: ${{ matrix.rid }} build
 
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
         with:
           submodules: recursive
       - name: Setup dotnet
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ matrix.dotnet }}
       - run: dotnet restore CustomRenamer.csproj
       - run: dotnet publish -c Release CustomRenamer.csproj
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
-          path: bin/Release/netstandard2.1/Renamer.Cazzar*
+          name: Renamer.Cazzar
+          path: bin/Release/net10.0/Renamer.Cazzar*
