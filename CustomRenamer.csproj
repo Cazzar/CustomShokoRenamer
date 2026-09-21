@@ -27,6 +27,6 @@
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Shoko.Abstractions" Version="6.0.0-alpha.82" />
+    <PackageReference Include="Shoko.Abstractions" Version="6.0.0-alpha.93" />
   </ItemGroup>
 </Project>
